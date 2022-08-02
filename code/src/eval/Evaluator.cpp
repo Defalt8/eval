@@ -10,6 +10,21 @@
 namespace eval {
 
 static String
+stripped(String const & string) noexcept(false)
+{
+	String stripped_string { string.size() };
+	size_t length_ = string.length();
+	size_t j = 0;
+	for(size_t i = 0; i < length_; ++i)
+	{
+		char c = string[i];
+		if(!(isspace(c) || c == '"' || c == '\''))
+			stripped_string[j++] = c;
+	}
+	return { &stripped_string[0], &stripped_string[j] };
+}
+
+static String
 concat_args(int argc, char * argv[]) noexcept(false)
 {
 	size_t size_ = 1;
@@ -307,7 +322,7 @@ Evaluator::Evaluator(Evaluator && evaluator) noexcept
 value_t
 Evaluator::evaluate_args(int argc, char * argv[]) noexcept(false)
 {
-	return evaluate(concat_args(argc, argv));
+	return evaluate(stripped(concat_args(argc, argv)));
 }
 
 value_t
@@ -370,16 +385,17 @@ Evaluator::evaluate(String const & expression) noexcept(false)
 			}
 			else if(is_function(token)) // assigning to a function
 				throw exception::InvalidExpression(String::format(2048, "%s <-- function to the left of =", String(&expression[0], expression.cstr()[token_end_]).cstr()));
-			else
-				throw exception::InvalidExpression(String::format(2048, "%s <--", String(&expression[0], expression.cstr()[token_end_]).cstr()));
-			if(expression[sub_expression_end_] == '=')
+			else if(expression[sub_expression_end_] == '=')
 			{
 				// do assignment 
 				String semi_expression = get_semi_expression(expression, token_end_ + 1);
-				m_variables[token].value() = evaluate(semi_expression);
+				result = evaluate(semi_expression);
+				m_variables[token].value() = result;
 				i = token_end_ + 1 + semi_expression.length();
 				continue;
 			}
+			else if(i < length_)
+				throw exception::InvalidExpression(String::format(2048, "%s <--", String(&expression[0], expression.cstr()[token_end_]).cstr()));
 		}
 		operand_stack[operand_top++] = result;
 		if(i < length_)

@@ -32,7 +32,9 @@ class Evaluator
 	Evaluator();
 	Evaluator(Evaluator && evaluator) noexcept;
 	
+	// will concat and strip whitespaces and quotes '" 
 	value_t evaluate_args(int argc, char * argv[]) noexcept(false);
+	// expression must be a stripped string. no whitespaces in between
 	value_t evaluate(String const & expression) noexcept(false);
 	bool is_variable(String const & operand) const noexcept;
 	bool is_function(String const & operand) const noexcept;

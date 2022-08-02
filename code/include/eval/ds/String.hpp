@@ -84,7 +84,7 @@ class String final
 		if(&rhs != this)
 		{
 			this->~String();
-			new (this) String(move(rhs));
+			new ((void *)this) String(move(rhs));
 		}
 		return *this;
 	}
@@ -95,7 +95,7 @@ class String final
 		if(&rhs != this)
 		{
 			this->~String();
-			new (this) String(rhs);
+			new ((void *)this) String(rhs);
 		}
 		return *this;
 	}

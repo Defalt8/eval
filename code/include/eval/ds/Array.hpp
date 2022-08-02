@@ -56,7 +56,7 @@ class Array final
 		{
 			size_t size_ = size_t(m_end - m_begin);
 			for(size_t i = 0; i < size_; ++i)
-				new (&m_begin[i]) E { static_cast<E>(array.m_begin[i]) };
+				new ((void *)&m_begin[i]) E { static_cast<E>(array.m_begin[i]) };
 		}
 	}
 
@@ -67,7 +67,7 @@ class Array final
 		if(m_begin)
 		{
 			for(size_t i = 0; i < size_; ++i)
-				new (&m_begin[i]) E;
+				new ((void *)&m_begin[i]) E;
 		}
 	}
 
@@ -79,7 +79,7 @@ class Array final
 		if(m_begin)
 		{
 			for(size_t i = 0; i < size_; ++i)
-				new (&m_begin[i]) E { static_cast<Args&&>(args)... };
+				new ((void *)&m_begin[i]) E { static_cast<Args&&>(args)... };
 		}
 	}
 
@@ -89,7 +89,7 @@ class Array final
 		if(&rhs != this)
 		{
 			this->~Array();
-			new (this) Array(move(rhs));
+			new ((void *)this) Array(move(rhs));
 		}
 		return *this;
 	}
@@ -100,7 +100,7 @@ class Array final
 		if(&rhs != this)
 		{
 			this->~Array();
-			new (this) Array(rhs);
+			new ((void *)this) Array(rhs);
 		}
 		return *this;
 	}

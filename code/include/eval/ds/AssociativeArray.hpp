@@ -44,7 +44,7 @@ class AssociativeArray final
 		if(&rhs != this)
 		{
 			this->~AssociativeArray();
-			new (this) AssociativeArray(move(rhs));
+			new ((void *)this) AssociativeArray(move(rhs));
 		}
 		return *this;
 	}

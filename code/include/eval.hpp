@@ -9,7 +9,6 @@
 #include "eval/ds/AssociativeArray.hpp"
 #include "eval/exceptions.hpp"
 #include "eval/Operand.hpp"
-#include "eval/Operator.hpp"
 #include "eval/Evaluator.hpp"
 
 #endif // EVAL_HPP

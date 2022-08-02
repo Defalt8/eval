@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <new>
 #include "../common.hpp"
+#include "exceptions.hpp"
 #include "Array.hpp"
 
 namespace eval {

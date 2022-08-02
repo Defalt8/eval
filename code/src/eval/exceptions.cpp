@@ -1,27 +1,8 @@
+#include <eval/ds/exceptions.hpp>
+#include <eval/ds/String.hpp>
 #include <eval/exceptions.hpp>
 
 namespace eval {
-
-static char const *
-enum_string_exception_type(ExceptionType exception_type) noexcept
-{
-	switch(exception_type)
-	{
-		default:
-		case ExceptionType::Unspecified:       return "Unspecified";
-		case ExceptionType::NullPointer:       return "NullPointer";
-		case ExceptionType::InvalidCast:       return "InvalidCast";
-		case ExceptionType::AllocationFailure: return "AllocationFailure";
-		case ExceptionType::IndexOutOfBounds:  return "IndexOutOfBounds";
-		case ExceptionType::EntriesFull:       return "EntriesFull";
-		case ExceptionType::EntryNotFound:     return "EntryNotFound";
-		case ExceptionType::InvalidExpression: return "InvalidExpression";
-		case ExceptionType::InvalidValue:      return "InvalidValue";
-		case ExceptionType::InvalidOperator:   return "InvalidOperator";
-		case ExceptionType::NullReference:     return "NullReference";
-		case ExceptionType::UnknownFunction:   return "UnknownFunction";
-	}
-}
 
 ExceptionType 
 Exception::type() const noexcept 
@@ -109,6 +90,9 @@ EntryNotFound::description() const noexcept
 	return "entry not found"; 
 }
 
+InvalidExpression::InvalidExpression(String description_) noexcept
+	: m_description { move(description_) }
+{}
 
 ExceptionType 
 InvalidExpression::type() const noexcept 
@@ -119,7 +103,7 @@ InvalidExpression::type() const noexcept
 char const * 
 InvalidExpression::description() const noexcept 
 { 
-	return "invalid expression"; 
+	return m_description.cstr(); 
 }
 
 
@@ -159,6 +143,19 @@ char const *
 UnknownFunction::description() const noexcept 
 { 
 	return "function not registered"; 
+}
+
+
+ExceptionType 
+UnknownID::type() const noexcept 
+{
+	return ExceptionType::UnknownID; 
+}
+
+char const * 
+UnknownID::description() const noexcept 
+{ 
+	return "unknown id"; 
 }
 
 

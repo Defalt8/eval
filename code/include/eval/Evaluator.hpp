@@ -4,7 +4,6 @@
 
 #include "common.hpp"
 #include "Operand.hpp"
-#include "Operator.hpp"
 #include "ds/Unique.hpp"
 #include "ds/Array.hpp"
 #include "ds/AssociativeArray.hpp"
@@ -19,15 +18,14 @@ static constexpr size_t _Max_Operators  = 2048;
 
 class Evaluator
 {
+ public:
+	using func_t = value_t(*)(value_t);
 	using variables_t  = AssociativeArray<String,operand::Value>;
-	using functions_t  = AssociativeArray<String,op::Function>;
-	using operators_t  = Array<Unique<Operator>>;
-	using operands_t   = Array<Unique<Operand>>;
+	using functions_t  = AssociativeArray<String,func_t>;
 
+ private:
 	variables_t  m_variables  { _Max_Variables };
 	functions_t  m_functions  { _Max_Functions };
-	operators_t  m_operators  { _Max_Operators };
-	operands_t   m_operands   { _Max_Operands  };
 
  public:
 	~Evaluator() noexcept;
@@ -36,7 +34,6 @@ class Evaluator
 	
 	value_t evaluate_args(int argc, char * argv[]) noexcept(false);
 	value_t evaluate(String const & expression) noexcept(false);
-	bool is_valid(String const & expression) const noexcept;
 	bool is_variable(String const & operand) const noexcept;
 	bool is_function(String const & operand) const noexcept;
 

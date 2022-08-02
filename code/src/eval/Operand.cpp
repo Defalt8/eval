@@ -1,4 +1,5 @@
 #include <eval/Operand.hpp>
+#include <eval/exceptions.hpp>
 
 namespace eval {
 

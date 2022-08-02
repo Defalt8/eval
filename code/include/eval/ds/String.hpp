@@ -4,8 +4,10 @@
 
 #include <cstddef>
 #include <cstring>
+#include <cstdio>
 #include <new>
 #include "../common.hpp"
+#include "exceptions.hpp"
 
 namespace eval {
 
@@ -70,6 +72,19 @@ class String final
 		}
 	}
 
+	String(char const * begin_, char const * end_, size_t size_ = -1) noexcept(false)
+		: m_begin { begin_ ? _allocate((size_ = size_t(end_ - begin_) + 1)) : nullptr }
+		, m_end   { m_begin ? (m_begin + size_) : nullptr }
+	{
+		if(m_begin)
+		{
+			size_t length_ = size_ - 1;
+			for(size_t i = 0; i < length_; ++i)
+				m_begin[i] = begin_[i];
+			m_begin[length_] = '\0';
+		}
+	}
+
 	String(char const * pstring, size_t size_ = -1) noexcept(false)
 		: m_begin { pstring ? _allocate((size_ = strlen(pstring) + 1)) : nullptr }
 		, m_end   { m_begin ? (m_begin + size_) : nullptr }
@@ -111,6 +126,15 @@ class String final
 		}
 	}
 
+	template <typename... Args>
+	static String
+	format(size_t size_, char const * format_, Args &&... args) noexcept
+	{
+		String string { size_ };
+		int written = snprintf(&string[0], size_, format_, static_cast<Args&&>(args)...);
+		return String(&string[0], &string[written > 0 ? written : 0]);
+	}
+
 	char &
 	operator[](size_t index) noexcept(false)
 	{
@@ -130,6 +154,8 @@ class String final
 	bool
 	operator==(String const & rhs) const noexcept
 	{
+		if(!m_begin)
+			return !rhs.m_begin;
 		return 0 == strncmp(m_begin, rhs.m_begin, min(size(), rhs.size()));
 	}
 

@@ -2,8 +2,6 @@
 #ifndef EVAL_COMMON_HPP
 #define EVAL_COMMON_HPP
 
-#include "exceptions.hpp"
-
 namespace eval {
 
 using value_t = double;

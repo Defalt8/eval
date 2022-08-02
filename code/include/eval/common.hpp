@@ -8,6 +8,9 @@ namespace eval {
 
 using value_t = double;
 
+extern int report_error(int error_num, char const * error_str) noexcept;
+extern void report_value(value_t const & value) noexcept;
+
 template <typename T>
 static constexpr T const &
 max(T const & a, T const & b) noexcept
@@ -31,9 +34,6 @@ swap(T & lhs, T & rhs) noexcept
 	rhs   = move(tmp);
 }
 
-extern int report_error(int error_num, char const * error_str) noexcept;
-extern void report_value(value_t const & value) noexcept;
-
 template <typename T, typename... Args>
 struct IsConstructible { static constexpr bool value = __is_constructible(T, Args...); };
 
@@ -44,8 +44,6 @@ template <bool c, class T = void> using enable_if_t = typename EnableIf<c,T>::ty
 template <typename T>
 static constexpr T decl();
 
-template <typename T> 
-static constexpr T && move(T && t) noexcept { return static_cast<T &&>(t); }
 template <typename T> 
 static constexpr T && move(T & t) noexcept { return static_cast<T &&>(t); }
 template <typename T> 

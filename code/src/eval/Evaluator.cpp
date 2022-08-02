@@ -35,7 +35,11 @@ concat_args(int argc, char * argv[]) noexcept(false)
 	for(int i = 1; i < argc; ++i)
 	{
 		size_t length = strlen(argv[i]);
+	  #ifdef _MSC_VER
 		strncpy_s(&expression[k], size_ - k, argv[i], length);
+	  #else
+		strncpy(&expression[k], argv[i], length);
+	  #endif
 		k += length;
 		expression[k++] = ' ';
 	}
@@ -296,7 +300,7 @@ register_default_functions(Evaluator::functions_t & functions) noexcept(false)
 	functions["acos"] = acos;
 	functions["atan"] = atan;
 	functions["sign"] = sign;
-	functions["abs"] = abs;
+	functions["abs"] = fabs;
 	functions["deg2rad"] = deg2rad;
 	functions["rad2deg"] = rad2deg;
 	functions["norm2rad"] = norm2rad;

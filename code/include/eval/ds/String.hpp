@@ -11,6 +11,7 @@
 
 namespace eval {
 
+
 class String final
 {
 	char * m_begin = nullptr;
@@ -90,7 +91,11 @@ class String final
 		, m_end   { m_begin ? (m_begin + size_) : nullptr }
 	{
 		if(m_begin)
+		  #ifdef _MSC_VER
 			strncpy_s(m_begin, size_, pstring, size_);
+		  #else
+			strncpy(m_begin, pstring, size_);
+		  #endif
 	}
 
 	String &

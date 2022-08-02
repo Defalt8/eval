@@ -2,6 +2,8 @@
 #ifndef EVAL_COMMON_HPP
 #define EVAL_COMMON_HPP
 
+#include <cstddef>
+
 namespace eval {
 
 using value_t = double;

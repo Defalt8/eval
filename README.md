@@ -1,4 +1,4 @@
-# eval 1.2.7
+# eval 1.3.7
 
 eval is a commandline tool used to evaluate mathematical expressions quick.  
 \[Alpha\]

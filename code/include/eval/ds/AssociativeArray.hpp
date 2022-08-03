@@ -18,6 +18,7 @@ struct Entry
 	bool occupied = false;
 };
 
+// Do not reset keys once set
 template <typename Key, typename Value>
 class AssociativeArray final
 {
@@ -61,9 +62,9 @@ class AssociativeArray final
 	{
 		if(!m_entries)
 			throw eval::exception::NullPointer();
-		size_t hash_ = hash(key);
 		size_t size_ = m_entries.size();
-		size_t i = hash_ % size_;
+		size_t partition_ = partition(key, hash(key), size_);
+		size_t i = partition_;
 		for(; i < size_; ++i)
 		{
 			if(!m_entries[i].occupied)
@@ -75,9 +76,9 @@ class AssociativeArray final
 			else if(m_entries[i].key == key)
 				break;
 		}
-		if(i == size_ && (hash_ % size_) > 0)
+		if(i == size_ && partition_ > 0)
 		{
-			i = (hash_ % size_) - 1;
+			i = partition_ - 1;
 			for(;; --i)
 			{
 				if(!m_entries[i].occupied)
@@ -105,9 +106,9 @@ class AssociativeArray final
 	{
 		if(!m_entries)
 			throw eval::exception::NullPointer();
-		size_t hash_ = hash(key);
 		size_t size_ = m_entries.size();
-		size_t i = hash_ % size_;
+		size_t partition_ = partition(key, hash(key), size_);
+		size_t i = partition_;
 		for(; i < size_; ++i)
 		{
 			if(!m_entries[i].occupied)
@@ -118,9 +119,9 @@ class AssociativeArray final
 			else if(m_entries[i].key == key)
 				break;
 		}
-		if(i == size_ && (hash_ % size_) > 0)
+		if(i == size_ && partition_ > 0)
 		{
-			i = (hash_ % size_) - 1;
+			i = partition_ - 1;
 			for(;; --i)
 			{
 				if(!m_entries[i].occupied)

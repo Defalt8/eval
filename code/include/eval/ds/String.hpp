@@ -4,7 +4,6 @@
 
 #include <cstddef>
 #include <cstring>
-#include <cstdio>
 #include <new>
 #include "../common.hpp"
 #include "exceptions.hpp"
@@ -221,6 +220,24 @@ hash(String const & string) noexcept
     for(size_t i = 0; i < length; ++i)
         hash_ += size_t(cstr[0]) * _prime_squares[i % 127];
 	return hash_;
+}
+
+static inline size_t 
+partition(String const & string, size_t hash_, size_t table_size_) noexcept
+{
+	static constexpr size_t partition_count_ = 63; // 10+26*2+1: 0-9, A-Z, a-z, _
+	char first_char = string ? string[0] : 0;
+	size_t partition_ = 0;
+	if(first_char >= '0' && first_char <= '9')
+		partition_ = size_t(first_char - '0'); 
+	else if(first_char >= 'A' && first_char <= 'Z')
+		partition_ = 10 + size_t(first_char - 'A');
+	else if(first_char >= 'a' && first_char <= 'z')
+		partition_ = 36 + size_t(first_char - 'a');
+	else if(first_char == '_')
+		partition_ = 62;
+	size_t partition_size_ = table_size_ / partition_count_;
+	return partition_ * partition_size_ + hash_ % partition_size_;
 }
 
 } // namespace eval

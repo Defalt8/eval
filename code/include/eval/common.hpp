@@ -59,6 +59,16 @@ hash(T const & value) noexcept
 	return size_t(value);
 }
 
+template <typename T>
+static inline size_t 
+partition(T const & value, size_t hash_, size_t table_size_) noexcept
+{
+	char first_char = value ? value[0] : '\0';
+	size_t partition = size_ / 256;
+	size_t i = first_char * partition + (hash_ % partition);
+	return hash_ % table_size_;
+}
+
 } // namespace eval
 
 #endif // EVAL_COMMON_HPP

@@ -18,21 +18,9 @@ int main(int argc, char *argv[])
 				while((input = eval::String::get_input()) && (input != "~exit" && input != "~quit"))
 				{
 					if(input == "~vars")
-					{
-						auto const & vars = evaluator.variables();
-						for(auto const & var : vars)
-							if(var.occupied)
-								printf("  %10s -> %.15lf\n", var.key.cstr(), var.value.value());
-							putc('\n', stdout);
-					}
+						evaluator.list_variables();
 					else if(input == "~funcs")
-					{
-						auto const & funcs = evaluator.functions();
-						for(auto const & func : funcs)
-							if(func.occupied)
-								printf("  %s\n", func.key.cstr());
-							putc('\n', stdout);
-					}
+						evaluator.list_functions();
 					else if(input == "~help")
 					{
 						printf("%s\n", _Help_String);
@@ -55,6 +43,10 @@ int main(int argc, char *argv[])
 			{
 				printf("%s\n", _Help_String);
 			}
+			else if(arg1 == "-lv" || arg1 == "-vars" || arg1 == "-variables")
+				eval::Evaluator().list_variables();
+			else if(arg1 == "-lf" || arg1 == "-funcs" || arg1 == "-functions")
+				eval::Evaluator().list_functions();
 			else
 			{
 				auto evaluator = eval::Evaluator();
@@ -72,14 +64,16 @@ int main(int argc, char *argv[])
 
 
 char const * _Help_String = R"(
-eval 1.1.6
+eval 1.2.7
 
-COMMANDLINE-ARGUMENTS
-    -i|--interactive    start in interactive mode
-    -h|--help           display this help
+Commandline Arguments
+    -i|--interactive        start in interactive mode
+    -h|--help               display this help
+    -lv|--list-variables    lists the registered variables
+    -lf|--list-functions    lists the registered functions
 
-INTERACTIVE-MODE-COMMANDS
-    ~exit|~quit         exit
-    ~vars               list variables and their values
-    ~funcs              list functions
+Interactive Mode Commands
+    ~exit|~quit             exit
+    ~vars                   list variables and their values
+    ~funcs                  list functions
 )";

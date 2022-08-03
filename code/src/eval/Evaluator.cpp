@@ -295,39 +295,58 @@ static void
 register_default_variables(Evaluator::variables_t & variables) noexcept(false)
 {
 	variables["e"].value()      = 2.7182818284590452354L;
-	variables["log2e"].value()  = 1.4426950408889634074L;
-	variables["ln10"].value()   = 2.30258509299404568402L;
-	variables["ln2"].value()    = 0.69314718055994530942L;
-	variables["log10e"].value() = 0.43429448190325182765L;
 	variables["pi"].value()     = 3.14159265358979323846L;
 	variables["2pi"].value()    = 2*3.14159265358979323846L;
-	variables["3pi"].value()    = 3*3.14159265358979323846L;
-	variables["4pi"].value()    = 4*3.14159265358979323846L;
 }
 
 value_t deg2rad(value_t v) noexcept { return v * 3.14159265358979323846L / 180.L; }
 value_t rad2deg(value_t v) noexcept { return v * 180.L / 3.14159265358979323846L; }
 value_t norm2rad(value_t v) noexcept { return v * (2*3.14159265358979323846L); }
 value_t rad2norm(value_t v) noexcept { return v / (2*3.14159265358979323846L); }
-value_t sign(value_t v) noexcept { return v < 0 ? -1 : 1; }
-value_t signz(value_t v) noexcept { return v == 0 ? 0 : (v < 0 ? -1 : 1); }
+value_t sign(value_t v) noexcept { return v == 0 ? 0 : (v > 0 ? 1 : -1); }
+value_t signp(value_t v) noexcept { return v >= 0 ? 1 : -1; }
+value_t signn(value_t v) noexcept { return v <= 0 ? -1 : 1; }
+value_t 
+integer(value_t v) noexcept 
+{ 
+	value_t dec; 
+	modf(v, &dec); 
+	return dec;
+}
+value_t 
+fraction(value_t v) noexcept 
+{ 
+	value_t dec; 
+	return modf(v, &dec); 
+}
 
 static void
 register_default_functions(Evaluator::functions_t & functions) noexcept(false)
 {
-	functions["sqrt"] = sqrt;
-	functions["sin"] = sin;
-	functions["cos"] = cos;
-	functions["tan"] = tan;
-	functions["asin"] = asin;
-	functions["acos"] = acos;
-	functions["atan"] = atan;
-	functions["sign"] = sign;
-	functions["abs"] = fabs;
-	functions["deg2rad"] = deg2rad;
-	functions["rad2deg"] = rad2deg;
-	functions["norm2rad"] = norm2rad;
-	functions["rad2norm"] = rad2norm;
+	functions["sqrt"]    = { sqrt    , "square root" };
+	functions["sin"]     = { sin     , "sine, input is in radians" };
+	functions["cos"]     = { cos     , "cosine, input is in radians" };
+	functions["tan"]     = { tan     , "tangent, input is in radians" };
+	functions["asin"]    = { asin    , "arc-sine, input is in radians" };
+	functions["acos"]    = { acos    , "arc-cos, input is in radians" };
+	functions["atan"]    = { atan    , "arc-tangent, input is in radians" };
+	functions["exp"]     = { exp     , "exponent : e ^ x" };
+	functions["log"]     = { log     , "logarithm base e" };
+	functions["log10"]   = { log10   , "logarithm base 10" };
+	functions["log2"]    = { log2    , "logarithm base 2" };
+	functions["floor"]   = { floor   , "floor" };
+	functions["ceil"]    = { ceil    , "ceiling" };
+	functions["round"]   = { round   , "round to the nearest integer" };
+	functions["sign"]    = { sign    , "signum : x == 0 ? 0 : (x > 0 ? 1 : -1)" };
+	functions["signp"]   = { signp   , "signum positive : x >= 0 ? 1 : -1" };
+	functions["signn"]   = { signn   , "signum positive : x <= 0 ? -1 : 1" };
+	functions["abs"]     = { fabs    , "absolute value" };
+	functions["int"]     = { integer , "integral part" };
+	functions["frac"]    = { fraction, "fractional part" };
+	functions["deg2rad"] = { deg2rad , "degree to radians" };
+	functions["rad2deg"] = { rad2deg , "radians to degree" };
+	functions["norm2rad"]= { norm2rad, "normal[0:1] to radians" };
+	functions["rad2norm"]= { rad2norm, "radians to normal[0:1]" };
 }
 
 /**************************************************/
@@ -407,7 +426,7 @@ Evaluator::evaluate(String const & expression) noexcept(false)
 				{
 					String sub_expression = get_sub_expression(expression, token_end_);
 					value_t sub_value = evaluate(sub_expression);
-					result = sign_ * m_functions[id_token](sub_value);
+					result = sign_ * m_functions[id_token].function(sub_value);
 					i = token_end_ + sub_expression.length() + 2;
 				}
 				else
@@ -492,6 +511,24 @@ Evaluator::is_function(String const & operand_) const noexcept
 		return false;
 	}
 	return true;
+}
+
+void 
+Evaluator::list_variables() const noexcept
+{
+	for(auto const & var : m_variables)
+		if(var.occupied)
+			printf("  %10s -> %.15lf\n", var.key.cstr(), var.value.value());
+	putc('\n', stdout);
+}
+
+void 
+Evaluator::list_functions() const noexcept
+{
+	for(auto const & func : m_functions)
+		if(func.occupied)
+			printf("  %10s :  %s\n", func.key.cstr(), func.value.description ? func.value.description.cstr() : "");
+	putc('\n', stdout);
 }
 
 Evaluator::variables_t & 

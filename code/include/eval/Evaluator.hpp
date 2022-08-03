@@ -16,10 +16,18 @@ static constexpr size_t _Max_Functions  = 1024;
 static constexpr size_t _Max_Operands   = 2048;
 static constexpr size_t _Max_Operators  = 2048;
 
+struct Function 
+{
+	using callable_t = value_t(*)(value_t);
+
+	callable_t function    = nullptr; 
+	String     description {}; 
+};
+
 class Evaluator
 {
  public:
-	using func_t = value_t(*)(value_t);
+	using func_t = Function;
 	using variables_t  = AssociativeArray<String,operand::Value>;
 	using functions_t  = AssociativeArray<String,func_t>;
 
@@ -38,6 +46,8 @@ class Evaluator
 	value_t evaluate(String const & expression) noexcept(false);
 	bool is_variable(String const & operand) const noexcept;
 	bool is_function(String const & operand) const noexcept;
+	void list_variables() const noexcept;
+	void list_functions() const noexcept;
 
 	variables_t       & variables()       noexcept;
 	variables_t const & variables() const noexcept;

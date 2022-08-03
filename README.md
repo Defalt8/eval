@@ -1,4 +1,4 @@
-# eval 1.1.6
+# eval 1.2.7
 
 eval is a commandline tool used to evaluate mathematical expressions quick.  
 \[Alpha\]
@@ -15,11 +15,11 @@ eval is a commandline tool used to evaluate mathematical expressions quick.
 
 ### Default variables
 
-e, log2e, ln10, ln2, log10e, pi, 2pi, 3pi, 4pi
+e log2e ln10 ln2 log10e pi 2pi 3pi 4pi
 
 ### Default functions
 
-sqrt, sin, cos, tan, asin, acos, atan, sign, abs, deg2rad, rad2deg, norm2rad, rad2norm
+sqrt sin cos tan asin acos atan exp log log10 log2 floor ceil round sign signp signn abs int frac deg2rad rad2deg norm2rad rad2norm
 
 ## examples
 
@@ -30,3 +30,12 @@ sqrt, sin, cos, tan, asin, acos, atan, sign, abs, deg2rad, rad2deg, norm2rad, ra
 - `eval "a=5" -> 5.00` sets `a` to `5`
 - `eval "x=pi;x=x*2" -> 6.28...`
 - `eval "x=pi;y=3;x*y" -> 9.42...`
+- interactive mode
+
+  ```shell
+    eval -i
+    > x = cos(deg2rad(45))
+    0.707106781186548
+    > result * 2
+    1.414213562373095
+  ```

@@ -9,24 +9,40 @@
 
 namespace eval {
 
-static String
+String
 stripped(String const & string) noexcept(false)
 {
 	String stripped_string { string.size() };
 	size_t length_ = string.length();
 	size_t j = 0;
 	bool checking_value_or_id = false;
+	bool space_encountered = false;
 	for(size_t i = 0; i < length_; ++i)
 	{
 		char c = string[i];
-		if((isspace(c) || c == '"' || c == '\''))
+		if(c == '"' || c == '\'')
 		{
-			if(checking_value_or_id)
+			space_encountered = false;
+			continue;
+		}
+		else if(isspace(c))
+		{
+			space_encountered = true;
+			continue;
+		}
+		else if(isalnum(c) || c == '.' || c == '_')
+		{
+			if(checking_value_or_id && space_encountered)
 				throw exception::InvalidExpression(String::format(2048, "%s <-- the space", String(&string[0], string.cstr()[i+1]).cstr()));
+			checking_value_or_id = true;
+			space_encountered    = false;
 		}
 		else
-			stripped_string[j++] = c;
-		checking_value_or_id = (isalnum(c) || c == '.' || c == '_');
+		{
+			space_encountered    = false;
+			checking_value_or_id = false;
+		}
+		stripped_string[j++] = c;
 	}
 	return { &stripped_string[0], &stripped_string[j] };
 }
@@ -456,7 +472,7 @@ Evaluator::is_variable(String const & operand_) const noexcept
 		auto const & variables_ = m_variables;
 		auto const & var = variables_[operand_];
 	}
-	catch(exception::EntryNotFound const & ex)
+	catch(exception::EntryNotFound const &)
 	{
 		return false;
 	}
@@ -471,7 +487,7 @@ Evaluator::is_function(String const & operand_) const noexcept
 		auto const & functions_ = m_functions;
 		auto const & func = functions_[operand_];
 	}
-	catch(exception::EntryNotFound const & ex)
+	catch(exception::EntryNotFound const &)
 	{
 		return false;
 	}

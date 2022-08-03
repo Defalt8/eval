@@ -45,6 +45,9 @@ class Evaluator
 	functions_t const & functions() const noexcept;
 };
 
+
+extern String stripped(String const & string) noexcept(false);
+
 } // namespace eval
 
 #endif // EVAL_EVALUATOR_HPP

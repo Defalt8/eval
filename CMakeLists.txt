@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.4 )
 
-project( eval VERSION 1.0.0 DESCRIPTION "command line tool for evaluating mathematical operations" )
+project( eval VERSION 1.1.6 DESCRIPTION "command line tool for evaluating mathematical operations" )
 
 set( EVAL_HEADER_FILES
 	code/include/eval.hpp

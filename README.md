@@ -1,4 +1,4 @@
-# eval
+# eval 1.1.6
 
 eval is a commandline tool used to evaluate mathematical expressions quick.  
 \[Alpha\]
@@ -8,9 +8,9 @@ eval is a commandline tool used to evaluate mathematical expressions quick.
 - PODMAS operators including %-modulo and ^-power.
 - Assignable variables and built-in variables and functions. Identifiers are case sensitive.
 - Chainable expressions separated by `;`
+- Interactive mode
 - \*to be implemented in the future\*
   - dynamic function and variable registering using modules and config files
-  - interactive mode
   - plotter
 
 ### Default variables

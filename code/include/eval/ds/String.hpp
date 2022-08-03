@@ -133,11 +133,24 @@ class String final
 
 	template <typename... Args>
 	static String
-	format(size_t size_, char const * format_, Args &&... args) noexcept
+	format(size_t size_, char const * format_, Args &&... args) noexcept(false)
 	{
 		String string { size_ };
 		int written = snprintf(&string[0], size_, format_, static_cast<Args&&>(args)...);
 		return String(&string[0], &string[written > 0 ? written : 0]);
+	}
+
+	template <size_t size_ = 2048>
+	static String
+	get_input() noexcept(false)
+	{
+		char line[size_] { '\0' };
+		size_t read_ = 0;
+		int c;
+		printf("> ");
+		while(read_ < size_ && (c = fgetc(stdin)) > 0 && c != '\n')
+			line[read_++] = char(c);
+		return { &line[0], &line[read_] };
 	}
 
 	char &

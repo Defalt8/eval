@@ -358,6 +358,9 @@ Evaluator::evaluate(String const & expression) noexcept(false)
 		{
 			size_t token_end_ = i, sub_expression_end_ = i;
 			String token = get_token(expression, i, token_end_);
+			size_t sign_index_ = token.length() > 1 ? (token[0] == '-' || token[0] == '+') : 0;
+			String id_token { &token[sign_index_], &token[token.length()] };
+			value_t sign_ = (token.length() >= 1 && token[0] == '-') ? -1 : 1;
 			// sub_expression_end_ to check if a function is being assigned
 			if(token_end_ < length_ && expression[token_end_] == '(')
 				sub_expression_end_ = token_end_ + get_sub_expression(expression, token_end_).length() + 2;
@@ -372,16 +375,16 @@ Evaluator::evaluate(String const & expression) noexcept(false)
 			else if(token_end_ >= length_ || expression[sub_expression_end_] != '=')
 			{
 				// token is not a value and not being assigned to 
-				if(is_variable(token))
+				if(is_variable(id_token))
 				{
-					result = m_variables[token].value();
+					result = sign_ * m_variables[id_token].value();
 					i = token_end_;
 				}
-				else if(is_function(token))
+				else if(is_function(id_token))
 				{
 					String sub_expression = get_sub_expression(expression, token_end_);
 					value_t sub_value = evaluate(sub_expression);
-					result = m_functions[token](sub_value);
+					result = sign_ * m_functions[id_token](sub_value);
 					i = token_end_ + sub_expression.length() + 2;
 				}
 				else
@@ -416,7 +419,6 @@ Evaluator::evaluate(String const & expression) noexcept(false)
 					while(op_top > 0 && precedes(op_stack[op_top-1], operator_char_))
 						result = operate(operand_stack[--operand_top], op_stack[--op_top], result);
 					operand_stack[operand_top++] = result;
-					// m_variables["result"].value() = result;
 				}
 				op_stack[op_top++] = operator_char_;
 			}
@@ -433,7 +435,6 @@ Evaluator::evaluate(String const & expression) noexcept(false)
 			result = operand_stack[--operand_top];
 			while(op_top > 0)
 				result = operate(operand_stack[--operand_top], op_stack[--op_top], result);
-			// m_variables["result"].value() = result;
 		}
 	}
 	m_variables["result"].value() = result;

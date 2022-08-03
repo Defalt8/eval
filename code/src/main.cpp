@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 
 
 char const * _Help_String = R"(
-eval 1.3.7
+eval 1.3.8
 
 Commandline Arguments
     -i|--interactive        start in interactive mode

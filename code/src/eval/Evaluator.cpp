@@ -261,9 +261,16 @@ get_token(String const & expression, size_t start_, size_t & token_end_) noexcep
 	if(expression[start] == '-' || expression[start] == '+')
 		throw exception::InvalidExpression(String::format(2048, "%s <--", String(&expression[0], expression.cstr()[start+1]).cstr()));
 	size_t i = start;
+	bool decimal_point = false;
 	for(; i < length_; ++i)
 	{
 		char c = expression[i];
+		if(c == '.')
+		{
+			if(decimal_point)
+				throw exception::InvalidExpression(String::format(2048, "%s <--", String(&expression[0], expression.cstr()[i+1]).cstr()));
+			decimal_point = true;
+		}
 		if(is_operator(c))
 			break;
 		else if(!(isalnum(c) || c == '.' || c == '_'))

@@ -15,18 +15,18 @@ stripped(String const & string) noexcept(false)
 	String stripped_string { string.size() };
 	size_t length_ = string.length();
 	size_t j = 0;
-	bool checking_value = false;
+	bool checking_value_or_id = false;
 	for(size_t i = 0; i < length_; ++i)
 	{
 		char c = string[i];
 		if((isspace(c) || c == '"' || c == '\''))
 		{
-			if(checking_value)
+			if(checking_value_or_id)
 				throw exception::InvalidExpression(String::format(2048, "%s <-- the space", String(&string[0], string.cstr()[i+1]).cstr()));
 		}
 		else
 			stripped_string[j++] = c;
-		checking_value = (isalnum(c) || c == '.');
+		checking_value_or_id = (isalnum(c) || c == '.' || c == '_');
 	}
 	return { &stripped_string[0], &stripped_string[j] };
 }
@@ -189,7 +189,7 @@ is_value(String const & operand_) noexcept
 		char c = operand_[i];
 		if((isdigit(c) || c == '.') && !value_)
 			value_ = true;
-		if(isalpha(c) && !nvalue_)
+		if((isalpha(c) || c == '_') && !nvalue_)
 			nvalue_ = true;
 	}
 	return value_ && !nvalue_;

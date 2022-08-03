@@ -15,11 +15,18 @@ stripped(String const & string) noexcept(false)
 	String stripped_string { string.size() };
 	size_t length_ = string.length();
 	size_t j = 0;
+	bool checking_value = false;
 	for(size_t i = 0; i < length_; ++i)
 	{
 		char c = string[i];
-		if(!(isspace(c) || c == '"' || c == '\''))
+		if((isspace(c) || c == '"' || c == '\''))
+		{
+			if(checking_value)
+				throw exception::InvalidExpression(String::format(2048, "%s <-- the space", String(&string[0], string.cstr()[i+1]).cstr()));
+		}
+		else
 			stripped_string[j++] = c;
+		checking_value = (isalnum(c) || c == '.');
 	}
 	return { &stripped_string[0], &stripped_string[j] };
 }

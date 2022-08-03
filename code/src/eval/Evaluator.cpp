@@ -180,7 +180,7 @@ is_value(String const & operand_) noexcept
 	for(size_t i = start_; i < length_; ++i)
 	{
 		char c = operand_[i];
-		if(isdigit(c) && !value_)
+		if((isdigit(c) || c == '.') && !value_)
 			value_ = true;
 		if(isalpha(c) && !nvalue_)
 			nvalue_ = true;
@@ -243,7 +243,7 @@ get_token(String const & expression, size_t start_, size_t & token_end_) noexcep
 		char c = expression[i];
 		if(is_operator(c))
 			break;
-		else if(!(isalnum(c) || c == '_'))
+		else if(!(isalnum(c) || c == '.' || c == '_'))
 			throw exception::InvalidExpression(String::format(2048, "%s <--", String(&expression[0], expression.cstr()[i+1]).cstr()));
 		token[j++] = c;
 	}

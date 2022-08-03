@@ -113,6 +113,8 @@ class Array final
 			for(E * it = m_begin; it < m_end; ++it)
 				it->~E();
 			_deallocate(m_begin);
+			m_begin = nullptr;
+			m_end   = nullptr;
 		}
 	}
 

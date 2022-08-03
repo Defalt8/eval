@@ -11,6 +11,8 @@ enum class ExceptionType
 	, InvalidCast
 	, AllocationFailure
 	, IndexOutOfBounds
+	, EntriesFull
+	, EntryNotFound
 	, InvalidExpression
 	, InvalidValue
 	, NullReference
@@ -55,6 +57,20 @@ class AllocationFailure final : public Exception
 };
 
 class IndexOutOfBounds final : public Exception
+{
+ public:
+	ExceptionType type() const noexcept override;
+	char const * description() const noexcept override;
+};
+
+class EntriesFull final : public Exception
+{
+ public:
+	ExceptionType type() const noexcept override;
+	char const * description() const noexcept override;
+};
+
+class EntryNotFound final : public Exception
 {
  public:
 	ExceptionType type() const noexcept override;

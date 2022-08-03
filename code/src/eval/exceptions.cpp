@@ -13,6 +13,8 @@ enum_string_exception_type(ExceptionType exception_type) noexcept
 		case ExceptionType::InvalidCast:       return "InvalidCast";
 		case ExceptionType::AllocationFailure: return "AllocationFailure";
 		case ExceptionType::IndexOutOfBounds:  return "IndexOutOfBounds";
+		case ExceptionType::EntriesFull:       return "EntriesFull";
+		case ExceptionType::EntryNotFound:     return "EntryNotFound";
 		case ExceptionType::InvalidExpression: return "InvalidExpression";
 		case ExceptionType::InvalidValue:      return "InvalidValue";
 		case ExceptionType::NullReference:     return "NullReference";
@@ -77,6 +79,33 @@ char const *
 IndexOutOfBounds::description() const noexcept 
 { 
 	return "index out of bounds"; 
+}
+
+
+
+ExceptionType 
+EntriesFull::type() const noexcept 
+{
+	return ExceptionType::EntriesFull; 
+}
+
+char const * 
+EntriesFull::description() const noexcept 
+{ 
+	return "entries full"; 
+}
+
+
+ExceptionType 
+EntryNotFound::type() const noexcept 
+{
+	return ExceptionType::EntryNotFound; 
+}
+
+char const * 
+EntryNotFound::description() const noexcept 
+{ 
+	return "entry not found"; 
 }
 
 

@@ -48,6 +48,15 @@ static constexpr T && move(T & t) noexcept { return static_cast<T &&>(t); }
 template <typename T> 
 static constexpr T && move(T const & t) noexcept = delete;
 
+template <typename T, size_t size_>
+static constexpr size_t size(T [size_]) noexcept { return size_; }
+
+template <typename T>
+static inline size_t 
+hash(T const & value) noexcept
+{
+	return size_t(value);
+}
 
 } // namespace eval
 

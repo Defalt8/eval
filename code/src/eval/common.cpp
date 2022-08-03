@@ -13,7 +13,7 @@ report_error(int error_num, char const * error_str) noexcept
 void 
 report_value(value_t const & value) noexcept
 {
-	printf("%Lf\n", value);
+	printf("%lf\n", value);
 }
 
 

@@ -6,7 +6,7 @@
 
 namespace eval {
 
-using value_t = long double;
+using value_t = double;
 
 template <typename T>
 static constexpr T const &
@@ -40,6 +40,9 @@ struct IsConstructible { static constexpr bool value = __is_constructible(T, Arg
 template <bool c, class T = void> struct EnableIf {};
 template <class T> struct EnableIf<true,T> { using type = T; };
 template <bool c, class T = void> using enable_if_t = typename EnableIf<c,T>::type;
+
+template <typename T>
+static constexpr T decl();
 
 template <typename T> 
 static constexpr T && move(T && t) noexcept { return static_cast<T &&>(t); }

@@ -8,7 +8,6 @@ set( EVAL_HEADER_FILES
 	code/include/eval/exceptions.hpp
 	code/include/eval/Operand.hpp
 	code/include/eval/Operator.hpp
-	code/include/eval/Operation.hpp
 	code/include/eval/Evaluator.hpp
 )
 
@@ -18,7 +17,6 @@ set( EVAL_SOURCE_FILES
 	code/src/eval/exceptions.cpp
 	code/src/eval/Operand.cpp
 	code/src/eval/Operator.cpp
-	code/src/eval/Operation.cpp
 	code/src/eval/Evaluator.cpp
 )
 

@@ -71,7 +71,7 @@ class String final
 	}
 
 	String(char const * pstring, size_t size_ = -1) noexcept(false)
-		: m_begin { _allocate((size_ = strlen(pstring) + 1)) }
+		: m_begin { pstring ? _allocate((size_ = strlen(pstring) + 1)) : nullptr }
 		, m_end   { m_begin ? (m_begin + size_) : nullptr }
 	{
 		if(m_begin)

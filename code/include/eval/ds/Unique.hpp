@@ -27,6 +27,15 @@ class Unique final
 	    unique.m_ptr = nullptr;
 	}
 
+	Unique(T * ptr_) noexcept
+		: m_ptr { ptr_ }
+	{}
+
+	template <typename U, typename = decltype(static_cast<T *>(decl<U *>()))>
+	Unique(U * ptr_) noexcept
+		: m_ptr { static_cast<T *>(ptr_) }
+	{}
+
 	Unique &
 	operator=(Unique && rhs) noexcept
 	{
@@ -90,6 +99,22 @@ class Unique final
 		if(!uptr_)
 			throw exception::InvalidCast();
 		return *uptr_;
+	}
+
+	T &
+	operator*() noexcept(false)
+	{
+		if(!m_ptr)
+			throw exception::NullPointer();
+		return *m_ptr;
+	}
+
+	T const &
+	operator*() const noexcept(false)
+	{
+		if(!m_ptr)
+			throw exception::NullPointer();
+		return *m_ptr;
 	}
 
 	T *

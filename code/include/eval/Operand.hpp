@@ -23,6 +23,9 @@ class Operand
 	virtual OperandType type() const noexcept = 0;
 	virtual String      id()   const noexcept = 0;
 
+	virtual value_t &       value()       noexcept(false) = 0;
+	virtual value_t const & value() const noexcept(false) = 0;
+
 };
 
 namespace operand {
@@ -39,8 +42,8 @@ class Value final : public Operand
 	OperandType type() const noexcept override;
 	String      id()   const noexcept override;
 	
-	value_t & value() noexcept;
-	value_t const & value() const noexcept;
+	value_t &       value()       noexcept(false) override;
+	value_t const & value() const noexcept(false) override;
 
 };
 
@@ -51,7 +54,9 @@ class Reference final : public Operand
 
  public:
 	Reference() noexcept;
-	Reference(String id, Operand & reference) noexcept;
+	Reference(String id, Operand & operand) noexcept;
+	Reference(String id, Value & value) noexcept;
+	Reference(String id, Reference & reference) noexcept;
 
 	OperandType type() const noexcept override;
 	String      id()   const noexcept override;
@@ -59,8 +64,8 @@ class Reference final : public Operand
 	Operand *       reference()       noexcept;
 	Operand const * reference() const noexcept;
 	
-	value_t &       value()       noexcept(false);
-	value_t const & value() const noexcept(false);
+	value_t &       value()       noexcept(false) override;
+	value_t const & value() const noexcept(false) override;
 
 };
 

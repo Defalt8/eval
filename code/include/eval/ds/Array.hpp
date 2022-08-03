@@ -67,7 +67,7 @@ class Array final
 		if(m_begin)
 		{
 			for(size_t i = 0; i < size_; ++i)
-				new (&m_begin[i]) E {};
+				new (&m_begin[i]) E;
 		}
 	}
 

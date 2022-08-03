@@ -17,6 +17,7 @@ enum_string_exception_type(ExceptionType exception_type) noexcept
 		case ExceptionType::EntryNotFound:     return "EntryNotFound";
 		case ExceptionType::InvalidExpression: return "InvalidExpression";
 		case ExceptionType::InvalidValue:      return "InvalidValue";
+		case ExceptionType::InvalidOperator:   return "InvalidOperator";
 		case ExceptionType::NullReference:     return "NullReference";
 		case ExceptionType::UnknownFunction:   return "UnknownFunction";
 	}
@@ -132,6 +133,19 @@ char const *
 InvalidValue::description() const noexcept 
 { 
 	return "invalid value"; 
+}
+
+
+ExceptionType 
+InvalidOperator::type() const noexcept 
+{
+	return ExceptionType::InvalidOperator; 
+}
+
+char const * 
+InvalidOperator::description() const noexcept 
+{ 
+	return "invalid operator"; 
 }
 
 

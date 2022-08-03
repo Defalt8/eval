@@ -15,6 +15,7 @@ enum class ExceptionType
 	, EntryNotFound
 	, InvalidExpression
 	, InvalidValue
+	, InvalidOperator
 	, NullReference
 	, UnknownFunction
 };
@@ -85,6 +86,13 @@ class InvalidExpression final : public Exception
 };
 
 class InvalidValue final : public Exception
+{
+ public:
+	ExceptionType type() const noexcept override;
+	char const * description() const noexcept override;
+};
+
+class InvalidOperator final : public Exception
 {
  public:
 	ExceptionType type() const noexcept override;

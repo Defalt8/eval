@@ -25,13 +25,13 @@ Value::id() const noexcept
 }
 
 value_t & 
-Value::value() noexcept 
+Value::value() noexcept(false)
 {
 	return m_value;
 }
 
 value_t const & 
-Value::value() const noexcept 
+Value::value() const noexcept(false)
 {
 	return m_value;
 }
@@ -40,10 +40,28 @@ Value::value() const noexcept
 Reference::Reference() noexcept
 {}
 
-Reference::Reference(String id_, Operand & reference_) noexcept
+Reference::Reference(String id_, Operand & operand_) noexcept
 	: m_id        { id_ }
-	, m_reference { &reference_ }
+{
+	Operand * operand = &operand_;
+	while(operand && operand->type() == OperandType::Reference)
+		operand = static_cast<operand::Reference *>(operand)->reference();
+	m_reference = operand;
+}
+
+Reference::Reference(String id_, Value & value_) noexcept
+	: m_id        { id_ }
+	, m_reference { &value_ }
 {}
+
+Reference::Reference(String id_, Reference & reference_) noexcept
+	: m_id        { id_ }
+{
+	Operand * operand = &reference_;
+	while(operand && operand->type() == OperandType::Reference)
+		operand = static_cast<operand::Reference *>(operand)->reference();
+	m_reference = operand;
+}
 
 OperandType 
 Reference::type() const noexcept 
